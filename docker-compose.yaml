@@ -33,7 +33,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: keycloak
       POSTGRES_HOST: postgres
-
+      
   postgres2:
     image: 'postgres:alpine'
     volumes:

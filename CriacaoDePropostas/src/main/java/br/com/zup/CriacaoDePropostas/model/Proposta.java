@@ -26,6 +26,8 @@ public class Proposta {
 	private BigDecimal salario;
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	@Column(unique = true)
+	private String IdCartao;
 	
 	
 	public Long getId() {
@@ -52,6 +54,14 @@ public class Proposta {
 		return salario;
 	}
 	
+	public Status getStatus() {
+		return status;
+	}
+
+	public void InsereIdCartao(String idCartao) {
+		IdCartao = idCartao;
+	}
+
 	@Deprecated
 	public Proposta() { }
 
@@ -62,6 +72,11 @@ public class Proposta {
 		this.nome = nome;
 		this.endereco = endereco;
 		this.salario = salario;
+	}
+	
+	@Override
+	public String toString() {
+		return " "+ getId() + " " + getNome() + " " + getRgCpf() + " ";
 	}
 
 	public void atualizaStatus(String resultadoSolicitacao) {

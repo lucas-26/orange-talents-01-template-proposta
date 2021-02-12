@@ -26,7 +26,7 @@ import br.com.zup.CriacaoDePropostas.repository.PropostaRepository;
 @RestController
 @RequestMapping("/Proposta")
 public class PropostaController {
-	
+
 	@InitBinder
 	public void init(WebDataBinder binder) {
 		binder.addValidators(new DocumentoValidacao());
@@ -36,31 +36,32 @@ public class PropostaController {
 	private PropostaRepository propostaRepository;
 	@Autowired
 	private AnaliseCliente analiseCliente;
-	
+
 	@PostMapping
-	public ResponseEntity<?> CadastrarProposta(@RequestBody @Valid PropostarRequest propostaRequest, UriComponentsBuilder uriComponentsBuilder){
+	public ResponseEntity<?> CadastrarProposta(@RequestBody @Valid PropostarRequest propostaRequest,
+			UriComponentsBuilder uriComponentsBuilder) {
 		Proposta proposta = PropostarRequest.converter(propostaRequest);
 		String documento = propostaRequest.getRgCpf();
 		Optional<Proposta> validaDocumentoExiste = propostaRepository.findByRgCpf(documento);
-		if(!validaDocumentoExiste.isEmpty()) {
+		if (!validaDocumentoExiste.isEmpty()) {
 			return ResponseEntity.status(422).build();
 		}
-		
+
 		try {
 			propostaRepository.save(proposta);
-			
-			AnaliseCliente.ConsultaStatusResquest consulta = new ConsultaStatusResquest(proposta.getRgCpf(), proposta.getNome(), proposta.getId());
-			AnaliseCliente.ConsultaAnalise consultaFeita =  analiseCliente.verificaProposta(consulta);
+
+			AnaliseCliente.ConsultaStatusResquest consulta = new ConsultaStatusResquest(proposta.getRgCpf(),
+					proposta.getNome(), proposta.getId());
+			AnaliseCliente.ConsultaAnalise consultaFeita = analiseCliente.verificaProposta(consulta);
 			proposta.atualizaStatus(consultaFeita.getResultadoSolicitacao());
 			propostaRepository.save(proposta);
-			
+
 			URI uri = uriComponentsBuilder.path("/VisualizarProposta/{id}").buildAndExpand(proposta.getId()).toUri();
-			
+
 			return ResponseEntity.created(uri).build();
-			
-		} catch (HttpClientErrorException.UnprocessableEntity e)  {
+
+		} catch (HttpClientErrorException.UnprocessableEntity e) {
 			return ResponseEntity.status(422).body(null);
 		}
 	}
 }
-
