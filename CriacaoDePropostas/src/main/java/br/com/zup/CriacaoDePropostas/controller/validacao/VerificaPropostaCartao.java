@@ -22,15 +22,20 @@ public class VerificaPropostaCartao {
 
 	@Scheduled(fixedDelayString = "${periodicidade.executa-operacao}")
 	private void buscaCartaoComProposta() {
+		try {
 
-		List<Proposta> propostas = propostaRepository.findAll();
-		propostas.forEach(proposta -> {
-			if (proposta.getStatus() == Status.ELEGIVEL) {
-				CartaoResponse value = analisaCartao.verificaSePropostatemCartao(proposta.getId().toString());
-				proposta.InsereIdCartao(value.getId());
-				propostaRepository.save(proposta);
-			}
-		});
+			List<Proposta> propostas = propostaRepository.findAll();
+			propostas.forEach(proposta -> {
+				if (proposta.getStatus() == Status.ELEGIVEL) {
+					CartaoResponse value = analisaCartao.verificaSePropostatemCartao(proposta.getId().toString());
+					proposta.InsereIdCartao(value.getId());
+					propostaRepository.save(proposta);
+				}
+			});
+
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 }

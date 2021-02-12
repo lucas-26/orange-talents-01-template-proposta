@@ -28,8 +28,7 @@ public class Proposta {
 	private Status status;
 	@Column(unique = true)
 	private String IdCartao;
-	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -53,9 +52,13 @@ public class Proposta {
 	public BigDecimal getSalario() {
 		return salario;
 	}
-	
+
 	public Status getStatus() {
 		return status;
+	}
+
+	public String getIdCartao() {
+		return IdCartao;
 	}
 
 	public void InsereIdCartao(String idCartao) {
@@ -63,7 +66,8 @@ public class Proposta {
 	}
 
 	@Deprecated
-	public Proposta() { }
+	public Proposta() {
+	}
 
 	public Proposta(String email, String rgCpf, String nome, Endereco endereco, BigDecimal salario) {
 		super();
@@ -73,14 +77,14 @@ public class Proposta {
 		this.endereco = endereco;
 		this.salario = salario;
 	}
-	
+
 	@Override
 	public String toString() {
-		return " "+ getId() + " " + getNome() + " " + getRgCpf() + " ";
+		return " " + getId() + " " + getNome() + " " + getRgCpf() + " ";
 	}
 
 	public void atualizaStatus(String resultadoSolicitacao) {
 		this.status = Status.resultadoPara(resultadoSolicitacao);
-		
+
 	}
 }
