@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   zookeeper:
     image: "confluentinc/cp-zookeeper:5.2.1"
     environment:
@@ -145,6 +144,15 @@ services:
       VAULT_DEV_ROOT_TOKEN_ID: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_ADDR: http://127.0.0.1:8200
+
+  containerizacao:
+    image: contlucasjava
+    environment: 
+      DATABASE_URL: "jdbc:postgresql://postgres2:7075/Aplicacao"
+    ports: 
+      - 5433:8079
+    depends_on: 
+      - postgres2
 
 volumes:
   grafana-volume:
