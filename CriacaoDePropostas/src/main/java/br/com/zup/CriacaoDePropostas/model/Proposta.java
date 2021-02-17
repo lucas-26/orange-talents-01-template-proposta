@@ -1,6 +1,7 @@
 package br.com.zup.CriacaoDePropostas.model;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -10,6 +11,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import br.com.zup.CriacaoDePropostas.repository.PropostaRepository;
 
 @Entity
 public class Proposta {
@@ -27,7 +30,7 @@ public class Proposta {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	@Column(unique = true)
-	private String IdCartao;
+	private String cartaoId;
 
 	public Long getId() {
 		return id;
@@ -58,11 +61,11 @@ public class Proposta {
 	}
 
 	public String getIdCartao() {
-		return IdCartao;
+		return cartaoId;
 	}
 
-	public void InsereIdCartao(String idCartao) {
-		IdCartao = idCartao;
+	public void InsereIdCartao(String cartaoId) {
+		this.cartaoId = cartaoId;
 	}
 
 	@Deprecated
@@ -85,6 +88,13 @@ public class Proposta {
 
 	public void atualizaStatus(String resultadoSolicitacao) {
 		this.status = Status.resultadoPara(resultadoSolicitacao);
-
+	}
+	
+	public static boolean existeIdCartao(PropostaRepository repository ,String meuIdCartao) {
+		Optional<Proposta> valor = repository.findBycartaoId(meuIdCartao);
+		if(valor.isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -11,4 +11,6 @@ import br.com.zup.CriacaoDePropostas.model.Proposta;
 public interface PropostaRepository extends JpaRepository<Proposta, Long> {
 
 	public Optional<Proposta> findByRgCpf(String documento);
+	
+	public Optional<Proposta> findBycartaoId(String idCartao);
 }
