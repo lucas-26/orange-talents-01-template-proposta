@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -69,7 +68,7 @@ public class PropostaController {
 		}
 	}
 
-	@GetMapping("consulta/{idProposta}")
+	@GetMapping("/consulta/{idProposta}")
 	public ResponseEntity<PropostaResponse> buscaProposta(@PathVariable("idProposta") Long id) {
 		Optional<Proposta> proposta = propostaRepository.findById(id);
 		if (proposta.isEmpty()) {
