@@ -25,11 +25,13 @@ import br.com.zup.CriacaoDePropostas.controller.validacao.AnaliseCliente.Consult
 import br.com.zup.CriacaoDePropostas.controller.validacao.DocumentoValidacao;
 import br.com.zup.CriacaoDePropostas.model.Proposta;
 import br.com.zup.CriacaoDePropostas.repository.PropostaRepository;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("/Proposta")
 public class PropostaController {
-
+	
 	@InitBinder
 	public void init(WebDataBinder binder) {
 		binder.addValidators(new DocumentoValidacao());
@@ -39,7 +41,13 @@ public class PropostaController {
 	private PropostaRepository propostaRepository;
 	@Autowired
 	private AnaliseCliente analiseCliente;
+	
+	  private Tracer tracer = null;
 
+	  public PropostaController(Tracer tracer) {
+	    this.tracer = tracer;
+	  }
+	
 	@PostMapping
 	public ResponseEntity<?> CadastrarProposta(@RequestBody @Valid PropostarRequest propostaRequest,
 			UriComponentsBuilder uriComponentsBuilder) {
@@ -61,6 +69,10 @@ public class PropostaController {
 
 			URI uri = uriComponentsBuilder.path("/VisualizarProposta/{id}").buildAndExpand(proposta.getId()).toUri();
 
+			Span activeSpan = tracer.activeSpan();
+			activeSpan.setTag("user.email", "Lucas.Rocha@zup.com.br");
+			activeSpan.setBaggageItem("user.email", "Lucas.Rocha@zup.com.br");
+			activeSpan.log("meu log");
 			return ResponseEntity.created(uri).build();
 
 		} catch (HttpClientErrorException.UnprocessableEntity e) {
@@ -77,6 +89,9 @@ public class PropostaController {
 			PropostaResponse response = new PropostaResponse(proposta.get().getEmail(), proposta.get().getRgCpf(),
 					proposta.get().getNome(), proposta.get().getEndereco(), proposta.get().getSalario(),
 					proposta.get().getStatus(), proposta.get().getIdCartao());
+			Span activeSpan = tracer.activeSpan();
+			String userEmail = activeSpan.getBaggageItem("user.email");
+			activeSpan.setBaggageItem("user.email", userEmail);
 			return ResponseEntity.ok(response);
 
 		}
