@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import br.com.zup.CriacaoDePropostas.controller.validacao.DocumentEncoder;
 import br.com.zup.CriacaoDePropostas.repository.PropostaRepository;
 
 @Entity
@@ -75,7 +76,7 @@ public class Proposta {
 	public Proposta(String email, String rgCpf, String nome, Endereco endereco, BigDecimal salario) {
 		super();
 		this.email = email;
-		this.rgCpf = rgCpf;
+		this.rgCpf = DocumentEncoder.GerarHash(rgCpf);
 		this.nome = nome;
 		this.endereco = endereco;
 		this.salario = salario;
